@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edukasi Pemanasan Global</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+        :root {
+            --bg-color: #f4f6f5;
+            --text-color: #2b2d42;
+            --primary: #3a5a40;
+            --secondary: #588157;
+            --accent: #a3b18a;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            border-left: 5px solid var(--accent);
+            padding-left: 15px;
+        }
+
+        /* Card Layout - Menyusun ke bawah */
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 5px; height: 100%;
+            background-color: var(--accent);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        /* Simulasi Interaktif */
+        .simulation-box {
+            background: #87ceeb;
+            height: 350px;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 20px;
+            transition: background 1s ease;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
+        }
+
+        .sim-stats {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .sim-controls {
+            z-index: 10;
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-emisi { background: #333; color: white; }
+        .btn-emisi:hover { background: #000; }
+        .btn-pohon { background: var(--primary); color: white; }
+        .btn-pohon:hover { background: var(--secondary); }
+
+        .co2-particle {
+            position: absolute;
+            bottom: 60px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, rgba(50,50,50,0.8) 0%, rgba(100,100,100,0) 70%);
+            border-radius: 50%;
+            animation: floatUp 3s infinite ease-in;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 0.7; }
+            100% { transform: translateY(-300px) scale(3); opacity: 0; }
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .quiz-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        .option-btn {
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--secondary);
+            background: #eef2ef;
+        }
+
+        .option-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+        .option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+        /* Anggota Kelompok */
+        .team-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .team-member {
+            background: linear-gradient(135deg, var(--card-bg), #f8f9fa);
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            animation: pulse 3s infinite alternate ease-in-out;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .team-member:hover {
+            transform: scale(1.1);
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 10px 20px rgba(58, 90, 64, 0.3);
+            animation-play-state: paused;
+        }
+
+        @keyframes pulse {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-8px); }
+        }
+        
+        .team-member:nth-child(2) { animation-delay: 0.5s; }
+        .team-member:nth-child(3) { animation-delay: 1s; }
+        .team-member:nth-child(4) { animation-delay: 1.5s; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Pemanasan Global</h1>
+        <p>Memahami ancaman terbesar planet kita melalui edukasi interaktif</p>
+    </header>
+
+    <div class="container">
+        <section>
+            <h2>Penjelasan & Gejala</h2>
+            <div class="card-container">
+                <div class="card">
+                    <h3>Apa itu Pemanasan Global?</h3>
+                    <p>Pemanasan global adalah proses peningkatan suhu rata-rata atmosfer, laut, dan daratan Bumi yang terjadi secara perlahan akibat terperangkapnya panas matahari oleh gas rumah kaca.</p>
+                </div>
+                <div class="card">
+                    <h3>Gejala 1: Cuaca Ekstrem</h3>
+                    <p>Perubahan pola cuaca yang tidak menentu, seperti badai yang lebih kuat, musim kemarau yang sangat panjang, hingga curah hujan tinggi yang menyebabkan banjir bandang.</p>
+                </div>
+                <div class="card">
+                    <h3>Gejala 2: Mencairnya Es Kutub</h3>
+                    <p>Peningkatan suhu menyebabkan gletser dan lapisan es di Kutub Utara dan Selatan mencair dengan cepat, mengancam habitat hewan seperti beruang kutub.</p>
+                </div>
+                <div class="card">
+                    <h3>Gejala 3: Naiknya Permukaan Laut</h3>
+                    <p>Volume air laut meningkat akibat es yang mencair dan pemuaian air laut yang menghangat, mengancam tenggelamnya wilayah pesisir dan pulau-pulau kecil.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Simulasi Efek Gas Rumah Kaca</h2>
+            <p style="margin-bottom: 15px; color: #555;">Tekan tombol untuk melihat dampak emisi karbon terhadap suhu dan atmosfer bumi kita.</p>
+            <div class="simulation-box" id="simBox">
+                <div class="sim-stats">Suhu Bumi: <span id="tempValue">15.0</span> °C</div>
+                <div class="sim-controls">
+                    <button class="btn-emisi" onclick="addEmissions()">Lepaskan Emisi CO2</button>
+                    <button class="btn-pohon" onclick="plantTree()">Tanam Pohon</button>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Latihan Soal (10 Pertanyaan)</h2>
+            <div class="quiz-container" id="quizContainer">
+                </div>
+        </section>
+
+        <section>
+            <h2>Tim Penyusun</h2>
+            <div class="team-container">
+                <div class="team-member">1. Gina</div>
+                <div class="team-member">2. Najwa Aliyah Daniah</div>
+                <div class="team-member">3. Reva Aulia Ghaisani</div>
+                <div class="team-member">4. ZiefaAnindya</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // --- LOGIKA SIMULASI ---
+        let temperature = 15.0;
+        let co2Level = 0;
+        const simBox = document.getElementById('simBox');
+        const tempValue = document.getElementById('tempValue');
+
+        function updateSimulation() {
+            tempValue.innerText = temperature.toFixed(1);
+            
+            // Ubah warna background dari biru (dingin) ke merah (panas)
+            // co2Level max kita asumsikan 20 untuk warna maksimal
+            let red = Math.min(255, 135 + (co2Level * 10));
+            let green = Math.max(50, 206 - (co2Level * 8));
+            let blue = Math.max(50, 235 - (co2Level * 10));
+            
+            simBox.style.background = `rgb(${red}, ${green}, ${blue})`;
+        }
+
+        function addEmissions() {
+            temperature += 0.5;
+            co2Level += 1;
+            updateSimulation();
+
+            // Efek partikel
+            for(let i=0; i<3; i++) {
+                let particle = document.createElement('div');
+                particle.className = 'co2-particle';
+                particle.style.left = Math.random() * 90 + '%';
+                particle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                simBox.appendChild(particle);
+
+                // Hapus partikel setelah animasi selesai
+                setTimeout(() => {
+                    particle.remove();
+                }, 4000);
+            }
+        }
+
+        function plantTree() {
+            if(co2Level > 0) {
+                temperature -= 0.5;
+                co2Level -= 1;
+                updateSimulation();
+            }
+        }
+
+        // --- LOGIKA KUIS ---
+        const quizData = [
+            { question: "1. Apa penyebab utama pemanasan global?", options: ["Emisi gas rumah kaca", "Gempa bumi", "Angin topan", "Pergerakan tektonik"], answer: 0 },
+            { question: "2. Gas rumah kaca yang paling banyak dihasilkan oleh aktivitas manusia adalah?", options: ["Metana", "Oksigen", "Karbon Dioksida (CO2)", "Nitrogen"], answer: 2 },
+            { question: "3. Apa dampak pemanasan global terhadap es di kutub?", options: ["Membeku lebih tebal", "Mencair dengan cepat", "Tidak ada perubahan", "Menjadi air tawar sepenuhnya"], answer: 1 },
+            { question: "4. Kegiatan mana yang dapat membantu MENGURANGI pemanasan global?", options: ["Menebang hutan", "Menggunakan plastik sekali pakai", "Reboisasi (Penanaman kembali)", "Membakar sampah"], answer: 2 },
+            { question: "5. Sektor apa yang menyumbang emisi gas Metana terbesar?", options: ["Transportasi", "Industri Tekstil", "Peternakan & Pertanian", "Pariwisata"], answer: 2 },
+            { question: "6. Lapisan gas yang melindungi bumi dari sinar UV disebut?", options: ["Troposfer", "Lapisan Ozon", "Eksosfer", "Litosfer"], answer: 1 },
+            { question: "7. Apa dampak kenaikan suhu air laut terhadap terumbu karang?", options: ["Terumbu karang tumbuh pesat", "Pemutihan karang (Coral bleaching)", "Karang menjadi kebal", "Banyak ikan hias bertelur"], answer: 1 },
+            { question: "8. Energi alternatif yang ramah lingkungan dan tidak menghasilkan emisi adalah?", options: ["Batu bara", "Minyak bumi", "Tenaga Surya", "Gas alam"], answer: 2 },
+            { question: "9. Apa fungsi sebenarnya dari efek rumah kaca secara alami bagi Bumi?", options: ["Menghancurkan bumi", "Menjaga kehangatan bumi agar bisa dihuni", "Menyebabkan kemarau", "Membekukan bumi"], answer: 1 },
+            { question: "10. Penggunaan kendaraan bermotor secara berlebihan akan meningkatkan gas?", options: ["Oksigen", "Hidrogen", "Karbon Monoksida & Dioksida", "Helium"], answer: 2 }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const quizContainer = document.getElementById('quizContainer');
+
+        function loadQuestion() {
+            if(currentQuestionIndex >= quizData.length) {
+                quizContainer.innerHTML = `
+                    <h3 style="font-size: 1.5rem; color: var(--primary);">Kuis Selesai!</h3>
+                    <p style="font-size: 1.2rem; margin-top: 10px;">Skor Anda: <strong>${score} / 10</strong></p>
+                    <button class="btn-pohon" style="margin-top: 20px;" onclick="resetQuiz()">Ulangi Kuis</button>
+                `;
+                return;
+            }
+
+            const q = quizData[currentQuestionIndex];
+            
+            let html = `<div class="quiz-question">${q.question}</div>`;
+            html += `<div class="options-grid">`;
+            q.options.forEach((opt, index) => {
+                html += `<button class="option-btn" onclick="checkAnswer(${index}, this)">${opt}</button>`;
+            });
+            html += `</div>`;
+
+            quizContainer.innerHTML = html;
+        }
+
+        function checkAnswer(selectedIndex, buttonElement) {
+            const correctIndex = quizData[currentQuestionIndex].answer;
+            const allButtons = document.querySelectorAll('.option-btn');
+            
+            // Disable semua tombol agar tidak bisa diklik dua kali
+            allButtons.forEach(btn => btn.disabled = true);
+
+            if(selectedIndex === correctIndex) {
+                buttonElement.classList.add('correct');
+                score++;
+            } else {
+                buttonElement.classList.add('wrong');
+                // Tunjukkan jawaban yang benar
+                allButtons[correctIndex].classList.add('correct');
+            }
+
+            // Tunggu 1 detik, lalu lanjut ke soal berikutnya otomatis
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuestion();
+            }, 1200);
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        // Muat soal pertama kali saat halaman dibuka
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>
